@@ -32,6 +32,21 @@ IMAGE_INSTALL += " \
     xbmc-image-custom-rfs \
     packagegroup-core-sdk \
     joe \
+    nano \
+    rsync \
+    ethtool \
+    samba \
+    transmission \
+    mpd \
+    mpc \
+    oscam \
+    lxc \
+    xz \
+    gnupg \
+    screen \
+    iw \
+    iproute2 \
+    alsa-conf \
 "
 
 export IMAGE_BASENAME = "xbmc-image"

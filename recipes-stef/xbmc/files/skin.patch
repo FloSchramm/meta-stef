@@ -1,0 +1,111 @@
+diff --git a/addons/skin.confluence/720p/Home.xml b/addons/skin.confluence/720p/Home.xml
+index c3af1e4..c2c8be8 100644
+--- a/addons/skin.confluence/720p/Home.xml
++++ b/addons/skin.confluence/720p/Home.xml
+@@ -897,6 +897,14 @@
+ 						<thumb>-</thumb>
+ 						<visible>!Skin.HasSetting(HomeMenuNoWeatherButton) + !IsEmpty(Weather.Plugin)</visible>
+ 					</item>
++						<item id="15">
++						<label>62345</label>
++						<onclick>RunAddon(script.homepilot)</onclick>
++						<icon>-</icon>
++						<thumb>-</thumb>
++						<visible></visible>
++					</item>
++
+ 					<item id="4">
+ 						<label>31951</label>
+ 						<onclick>ActivateWindow(Pictures)</onclick>
+@@ -1075,6 +1083,7 @@
+ 				<onright>21</onright>
+ 				<onup>9002</onup>
+ 				<ondown>9003</ondown>
++				<visible></visible>
+ 			</control>
+ 			<control type="image">
+ 				<description>Power Icon</description>
+diff --git a/addons/skin.confluence/720p/IncludesHomeMenuItems.xml b/addons/skin.confluence/720p/IncludesHomeMenuItems.xml
+index 6cb52ff..f9b4f51 100644
+--- a/addons/skin.confluence/720p/IncludesHomeMenuItems.xml
++++ b/addons/skin.confluence/720p/IncludesHomeMenuItems.xml
+@@ -194,11 +194,13 @@
+ 			<include>ButtonHomeSubCommonValues</include>
+ 			<label>7</label>
+ 			<onclick>ActivateWindow(FileManager)</onclick>
++			<visible>false</visible>
+ 		</control>
+ 		<control type="button" id="90124">
+ 			<include>ButtonHomeSubCommonValues</include>
+ 			<label>13200</label>
+ 			<onclick>ActivateWindow(Profiles)</onclick>
++			<visible>false</visible>
+ 		</control>
+ 		<control type="button" id="90125">
+ 			<include>ButtonHomeSubCommonValues</include>
+diff --git a/addons/skin.confluence/720p/Settings.xml b/addons/skin.confluence/720p/Settings.xml
+index 5811960..8a3b210 100644
+--- a/addons/skin.confluence/720p/Settings.xml
++++ b/addons/skin.confluence/720p/Settings.xml
+@@ -133,6 +133,7 @@
+ 						<label2>31409</label2>
+ 						<onclick>ActivateWindow(PVRSettings)</onclick>
+ 						<icon>special://skin/backgrounds/tv.jpg</icon>
++						<visible>false</visible>
+ 					</item>
+ 					<item id="4">
+ 						<label>2</label>
+diff --git a/addons/skin.confluence/language/English/strings.po b/addons/skin.confluence/language/English/strings.po
+index 460696d..39e45d1 100644
+--- a/addons/skin.confluence/language/English/strings.po
++++ b/addons/skin.confluence/language/English/strings.po
+@@ -693,3 +693,7 @@ msgstr ""
+ msgctxt "#31959"
+ msgid "SYSTEM"
+ msgstr ""
++
++msgctxt "#62345"
++msgid "HOMEPILOT"
++msgstr "HOMEPILOT"
+diff --git a/addons/skin.confluence/language/German/strings.po b/addons/skin.confluence/language/German/strings.po
+index c3d4948..c9a161b 100644
+--- a/addons/skin.confluence/language/German/strings.po
++++ b/addons/skin.confluence/language/German/strings.po
+@@ -607,3 +607,7 @@ msgstr "DISC ABSPIELEN"
+ msgctxt "#31959"
+ msgid "SYSTEM"
+ msgstr "SYSTEM"
++
++msgctxt "#62345"
++msgid "HOMEPILOT"
++msgstr "HOMEPILOT"
+diff --git a/xbmc/cores/dvdplayer/DVDCodecs/Video/DVDVideoCodecIMX.cpp b/xbmc/cores/dvdplayer/DVDCodecs/Video/DVDVideoCodecIMX.cpp
+index f8b2915..b0801fb 100644
+--- a/xbmc/cores/dvdplayer/DVDCodecs/Video/DVDVideoCodecIMX.cpp
++++ b/xbmc/cores/dvdplayer/DVDCodecs/Video/DVDVideoCodecIMX.cpp
+@@ -741,6 +741,13 @@ int CDVDVideoCodecIMX::Decode(BYTE *pData, int iSize, double dts, double pts)
+         m_frameInfo.pExtInfo->nFrmWidth  = (((m_frameInfo.pExtInfo->nFrmWidth) + 15) & ~15);
+         m_frameInfo.pExtInfo->nFrmHeight = (((m_frameInfo.pExtInfo->nFrmHeight) + 15) & ~15);
+ 
++        /* FIXME quick & dirty awful fix for issue #52 */
++        if (m_decOpenParam.CodecFormat == VPU_V_VP8)
++        {
++          idx = VpuFindBuffer(m_frameInfo.pDisplayFrameBuf->pbufY);
++          m_outputBuffers[idx]->SetPts(pts);
++        }
++
+         retStatus |= VC_PICTURE;
+       } //VPU_DEC_OUTPUT_DIS
+ 
+diff --git a/addons/skin.confluence/720p/SettingsSystemInfo.xml b/addons/skin.confluence/720p/SettingsSystemInfo.xml
+index b381efd..8ccce22 100644
+--- a/addons/skin.confluence/720p/SettingsSystemInfo.xml
++++ b/addons/skin.confluence/720p/SettingsSystemInfo.xml
+@@ -161,6 +161,7 @@
+ 					<texturenofocus border="5">MenuItemNF.png</texturenofocus>
+ 					<pulseonselect>false</pulseonselect>
+ 					<label>19191</label>
++					<visible>false</visible>
+ 				</control>
+ 			</control>
+ 			<control type="image">
